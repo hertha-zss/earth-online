@@ -1,201 +1,304 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <title>Earth Online v2</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: #0f172a;
-      color: white;
-    }
+<meta charset="UTF-8">
+<title>Earth Online</title>
 
-    /* 顶部栏 */
-    .topbar {
-      background: #111827;
-      padding: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #f5f5f5;
+}
 
-    .title {
-      font-weight: bold;
-    }
+/* 登录页 */
+#loginPage {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    /* tabs */
-    .tabs {
-      display: flex;
-      gap: 10px;
-    }
+.loginBox {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 300px;
+  text-align: center;
+}
 
-    .tab {
-      padding: 6px 12px;
-      background: #1f2937;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 13px;
-    }
+/* 系统布局 */
+#app {
+  display: none;
+  height: 100vh;
+}
 
-    .tab:hover {
-      background: #334155;
-    }
+/* 左侧栏 */
+.sidebar {
+  width: 200px;
+  background: white;
+  border-right: 1px solid #ddd;
+  padding: 10px;
+  float: left;
+  height: 100vh;
+}
 
-    /* 页面内容 */
-    .page {
-      display: none;
-      padding: 20px;
-    }
+.menu {
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 6px;
+}
 
-    .active {
-      display: block;
-    }
+.menu:hover {
+  background: #eee;
+}
 
-    .card {
-      background: #1e293b;
-      padding: 15px;
-      border-radius: 12px;
-      max-width: 500px;
-    }
+/* 主区域 */
+.main {
+  margin-left: 200px;
+  padding: 20px;
+}
 
-    input {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border-radius: 6px;
-      border: none;
-    }
+.page {
+  display: none;
+}
 
-    button {
-      margin-top: 10px;
-      padding: 10px;
-      width: 100%;
-      background: #38bdf8;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+.active {
+  display: block;
+}
+</style>
 
-    .xp {
-      color: #22c55e;
-      font-size: 18px;
-    }
-  </style>
 </head>
 
 <body>
 
-<!-- 顶部导航 -->
-<div class="topbar">
-  <div class="title">🌍 Earth Online</div>
+<!-- 🔐 登录页 -->
+<div id="loginPage">
+  <div class="loginBox">
+    <h2>🌍 Earth Online</h2>
+    <p>请输入你的名字进入系统</p>
 
-  <div class="tabs">
-    <div class="tab" onclick="show('home')">主页</div>
-    <div class="tab" onclick="show('dashboard')">仪表盘</div>
-    <div class="tab" onclick="show('calendar')">日历</div>
-    <div class="tab" onclick="show('achieve')">成就</div>
+    <input id="name" placeholder="Your Name" style="width:100%; padding:8px;">
+    <button onclick="login()" style="margin-top:10px; width:100%; padding:8px;">
+      进入系统
+    </button>
   </div>
 </div>
 
-<!-- 主页 -->
-<div id="home" class="page active">
-  <h2>欢迎来到 Earth Online</h2>
-  <p>一个人生游戏化系统</p>
+<!-- 🌍 系统 -->
+<div id="app">
+
+  <!-- 左侧菜单 -->
+  <div class="sidebar">
+  <h3>Earth Online</h3>
+
+  <div id="menuList"></div>
+
+  <hr>
+
+  <input id="newMenu" placeholder="新增模块" style="width:100%; padding:6px;">
+  <button onclick="addMenu()" style="width:100%; margin-top:5px;">
+    + 添加
+  </button>
+
+  <hr>
+
+  <div class="menu" onclick="logout()">退出</div>
 </div>
 
-<!-- 仪表盘 -->
-<div id="dashboard" class="page">
-  <div class="card">
-    <h3>📊 今日数据</h3>
+  <!-- 主内容 -->
+  <div class="main">
 
-    <label>工作</label>
-    <input id="work" type="number">
+    <div id="home" class="page active">
+      <h2>🌍 欢迎进入系统</h2>
+      <p id="userText"></p>
+    </div>
 
-    <label>学习</label>
-    <input id="study" type="number">
+    <div id="work" class="page">
+      <h2>工作</h2>
+    </div>
 
-    <label>兴趣</label>
-    <input id="hobby" type="number">
+    <div id="study" class="page">
+      <h2>学习</h2>
+    </div>
 
-    <label>娱乐</label>
-    <input id="play" type="number">
+    <div id="hobby" class="page">
+      <h2>兴趣</h2>
+    </div>
 
-    <button onclick="calc()">生成</button>
+    <div id="play" class="page">
+      <h2>娱乐</h2>
+    </div>
 
-    <div id="result" style="margin-top:10px;"></div>
   </div>
-</div>
-
-<!-- 日历 -->
-<div id="calendar" class="page">
-  <h3>📅 人生日历（开发中）</h3>
-  <p>未来这里会显示你的每一天格子</p>
-</div>
-
-<!-- 成就 -->
-<div id="achieve" class="page">
-  <h3>🏆 成就系统</h3>
-  <ul>
-    <li>🌱 初始人生系统已解锁</li>
-  </ul>
 </div>
 
 <script>
-function getTodayKey() {
-  let d = new Date();
-  return `earth_${d.getFullYear()}_${d.getMonth()+1}_${d.getDate()}`;
+
+// 🔐 登录
+function login() {
+  let name = document.getElementById("name").value;
+  if (!name) return;
+
+  localStorage.setItem("earth_user", name);
+  enterApp();
 }
 
-// 保存数据
-function saveData(data) {
-  localStorage.setItem(getTodayKey(), JSON.stringify(data));
-}
+// 🚪 进入系统
+function enterApp() {
+  let user = localStorage.getItem("earth_user");
 
-// 读取数据
-function loadData() {
-  let data = localStorage.getItem(getTodayKey());
-  return data ? JSON.parse(data) : null;
-}
+  if (user) {
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("app").style.display = "block";
 
-// 页面初始化
-window.onload = function () {
-  let data = loadData();
-  if (data) {
-    document.getElementById("work").value = data.work;
-    document.getElementById("study").value = data.study;
-    document.getElementById("hobby").value = data.hobby;
-    document.getElementById("play").value = data.play;
-    calc(); // 自动刷新状态
+    document.getElementById("userText").innerText =
+      "当前用户：" + user;
   }
+}
+
+// 获取当前用户
+function getUser() {
+  return localStorage.getItem("earth_user");
+}
+
+
+
+
+// 🚪 退出
+function logout() {
+  localStorage.removeItem("earth_user");
+  location.reload();
+}
+
+// 📄 页面切换
+function show(id) {
+  document.querySelectorAll(".page").forEach(p => {
+    p.classList.remove("active");
+  });
+  document.getElementById(id).classList.add("active");
+}
+
+// 🚀 自动检测登录
+window.onload = function () {
+  enterApp();
 };
 
-function calc() {
-  let work = Number(document.getElementById("work").value || 0);
-  let study = Number(document.getElementById("study").value || 0);
-  let hobby = Number(document.getElementById("hobby").value || 0);
-  let play = Number(document.getElementById("play").value || 0);
 
-  // 👉 自动保存
-  saveData({ work, study, hobby, play });
-
-  // XP系统
-  let xp = work * 8 + study * 12 + hobby * 6 + play * 2;
-  let level = Math.floor(xp / 50);
-
-  // 状态评分
-  let score = study * 2 + hobby - play;
-
-  let mood = "正常";
-  if (score > 5) mood = "高效";
-  else if (score < 0) mood = "摆烂";
-
-  document.getElementById("result").innerHTML = `
-    <div class="xp">XP: ${xp}</div>
-    <div>Level: ${level}</div>
-    <div>状态: ${mood}</div>
-  `;
+// 获取菜单
+function getMenus() {
+  let user = getUser();
+  let data = localStorage.getItem("menus_" + user);
+  return data ? JSON.parse(data) : ["主页","工作","学习","兴趣","娱乐"];
 }
+
+// 保存菜单
+function saveMenus(menus) {
+  let user = getUser();
+  localStorage.setItem("menus_" + user, JSON.stringify(menus));
+}
+
+// 渲染菜单
+function renderMenus() {
+  let menus = getMenus();
+  let box = document.getElementById("menuList");
+
+  box.innerHTML = "";
+
+  menus.forEach((name, index) => {
+    let div = document.createElement("div");
+    div.className = "menu";
+    div.style.display = "flex";
+    div.style.justifyContent = "space-between";
+    div.style.alignItems = "center";
+
+    // 左侧文字
+    let text = document.createElement("span");
+    text.innerText = name;
+    text.style.cursor = "pointer";
+    text.onclick = () => showPage(name);
+
+    // 右侧删除按钮
+    let del = document.createElement("span");
+    del.innerText = "✕";
+    del.style.color = "red";
+    del.style.cursor = "pointer";
+    del.onclick = (e) => {
+      e.stopPropagation();
+      deleteMenu(index);
+    };
+
+    div.appendChild(text);
+    div.appendChild(del);
+
+    box.appendChild(div);
+  });
+}
+
+// 添加菜单
+function addMenu() {
+  let name = document.getElementById("newMenu").value;
+  if (!name) return;
+
+  let menus = getMenus();
+  menus.push(name);
+
+  saveMenus(menus);
+  renderMenus();
+
+  document.getElementById("newMenu").value = "";
+}
+
+// 删除菜单
+function deleteMenu(index) {
+  let menus = getMenus();
+
+  let name = menus[index];
+
+  // 🚫 核心模块禁止删除
+  const coreModules = ["主页","工作","学习","兴趣","娱乐"];
+
+  if (coreModules.includes(name)) {
+    alert("核心系统模块不能删除！");
+    return;
+  }
+
+  menus.splice(index, 1);
+
+  localStorage.setItem("menus", JSON.stringify(menus));
+  renderMenus();
+}
+
+// 页面切换（自动生成页面）
+function showPage(name) {
+
+  // 如果没有页面就创建
+  let page = document.getElementById("page_" + name);
+
+  if (!page) {
+    let div = document.createElement("div");
+    div.id = "page_" + name;
+    div.className = "page";
+
+    div.innerHTML = `<h2>${name}</h2><p>这是 ${name} 页面</p>`;
+
+    document.querySelector(".main").appendChild(div);
+  }
+
+  // 切换显示
+  document.querySelectorAll(".page").forEach(p => {
+    p.classList.remove("active");
+  });
+
+  document.getElementById("page_" + name).classList.add("active");
+}
+
+// 初始化
+window.onload = function () {
+  enterApp();
+  renderMenus();
+};
+
 </script>
 
 </body>
