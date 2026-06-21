@@ -1,89 +1,172 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard</title>
+  <title>Earth Online v2</title>
   <style>
     body {
+      margin: 0;
       font-family: Arial;
       background: #0f172a;
       color: white;
-      display: flex;
-      justify-content: center;
-      padding: 40px;
     }
 
-    .container {
-      width: 420px;
-      background: #1e293b;
+    /* 顶部栏 */
+    .topbar {
+      background: #111827;
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .title {
+      font-weight: bold;
+    }
+
+    /* tabs */
+    .tabs {
+      display: flex;
+      gap: 10px;
+    }
+
+    .tab {
+      padding: 6px 12px;
+      background: #1f2937;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .tab:hover {
+      background: #334155;
+    }
+
+    /* 页面内容 */
+    .page {
+      display: none;
       padding: 20px;
-      border-radius: 16px;
+    }
+
+    .active {
+      display: block;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 15px;
+      border-radius: 12px;
+      max-width: 500px;
     }
 
     input {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
+      border-radius: 6px;
+      border: none;
     }
 
     button {
-      width: 100%;
-      margin-top: 15px;
+      margin-top: 10px;
       padding: 10px;
+      width: 100%;
       background: #38bdf8;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
+      cursor: pointer;
     }
 
-    .card {
-      margin-top: 20px;
-      background: #0f172a;
-      padding: 15px;
-      border-radius: 12px;
+    .xp {
+      color: #22c55e;
+      font-size: 18px;
     }
   </style>
 </head>
 
 <body>
 
-<div class="container">
-  <h2>📊 今日数据</h2>
+<!-- 顶部导航 -->
+<div class="topbar">
+  <div class="title">🌍 Earth Online</div>
 
-  <label>工作</label>
-  <input id="work" type="number">
+  <div class="tabs">
+    <div class="tab" onclick="show('home')">主页</div>
+    <div class="tab" onclick="show('dashboard')">仪表盘</div>
+    <div class="tab" onclick="show('calendar')">日历</div>
+    <div class="tab" onclick="show('achieve')">成就</div>
+  </div>
+</div>
 
-  <label>学习</label>
-  <input id="study" type="number">
+<!-- 主页 -->
+<div id="home" class="page active">
+  <h2>欢迎来到 Earth Online</h2>
+  <p>一个人生游戏化系统</p>
+</div>
 
-  <label>兴趣</label>
-  <input id="hobby" type="number">
+<!-- 仪表盘 -->
+<div id="dashboard" class="page">
+  <div class="card">
+    <h3>📊 今日数据</h3>
 
-  <label>娱乐</label>
-  <input id="play" type="number">
+    <label>工作</label>
+    <input id="work" type="number">
 
-  <button onclick="calc()">生成</button>
+    <label>学习</label>
+    <input id="study" type="number">
 
-  <div class="card" id="result"></div>
+    <label>兴趣</label>
+    <input id="hobby" type="number">
+
+    <label>娱乐</label>
+    <input id="play" type="number">
+
+    <button onclick="calc()">生成</button>
+
+    <div id="result" style="margin-top:10px;"></div>
+  </div>
+</div>
+
+<!-- 日历 -->
+<div id="calendar" class="page">
+  <h3>📅 人生日历（开发中）</h3>
+  <p>未来这里会显示你的每一天格子</p>
+</div>
+
+<!-- 成就 -->
+<div id="achieve" class="page">
+  <h3>🏆 成就系统</h3>
+  <ul>
+    <li>🌱 初始人生系统已解锁</li>
+  </ul>
 </div>
 
 <script>
+function show(pageId) {
+  let pages = document.querySelectorAll(".page");
+  pages.forEach(p => p.classList.remove("active"));
+  document.getElementById(pageId).classList.add("active");
+}
+
 function calc() {
-  let work = +work.value;
-  let study = +study.value;
-  let hobby = +hobby.value;
-  let play = +play.value;
+  let work = +document.getElementById("work").value;
+  let study = +document.getElementById("study").value;
+  let hobby = +document.getElementById("hobby").value;
+  let play = +document.getElementById("play").value;
 
   let xp = work*8 + study*12 + hobby*6 + play*2;
   let level = Math.floor(xp / 50);
 
   let score = study*2 + hobby - play;
 
-  let mood = score > 5 ? "高效" : score > 2 ? "正常" : "摆烂";
+  let mood = "正常";
+  if (score > 5) mood = "高效";
+  else if (score < 0) mood = "摆烂";
 
-  result.innerHTML = `
-    <h3>XP: ${xp}</h3>
-    <h3>Level: ${level}</h3>
-    <p>状态：${mood}</p>
+  document.getElementById("result").innerHTML = `
+    <div class="xp">XP: ${xp}</div>
+    <div>Level: ${level}</div>
+    <div>状态: ${mood}</div>
   `;
 }
 </script>
