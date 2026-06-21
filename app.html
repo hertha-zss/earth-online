@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .container {
+      width: 420px;
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 16px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 10px;
+      background: #38bdf8;
+      border: none;
+      border-radius: 10px;
+    }
+
+    .card {
+      margin-top: 20px;
+      background: #0f172a;
+      padding: 15px;
+      border-radius: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>📊 今日数据</h2>
+
+  <label>工作</label>
+  <input id="work" type="number">
+
+  <label>学习</label>
+  <input id="study" type="number">
+
+  <label>兴趣</label>
+  <input id="hobby" type="number">
+
+  <label>娱乐</label>
+  <input id="play" type="number">
+
+  <button onclick="calc()">生成</button>
+
+  <div class="card" id="result"></div>
+</div>
+
+<script>
+function calc() {
+  let work = +work.value;
+  let study = +study.value;
+  let hobby = +hobby.value;
+  let play = +play.value;
+
+  let xp = work*8 + study*12 + hobby*6 + play*2;
+  let level = Math.floor(xp / 50);
+
+  let score = study*2 + hobby - play;
+
+  let mood = score > 5 ? "高效" : score > 2 ? "正常" : "摆烂";
+
+  result.innerHTML = `
+    <h3>XP: ${xp}</h3>
+    <h3>Level: ${level}</h3>
+    <p>状态：${mood}</p>
+  `;
+}
+</script>
+
+</body>
+</html>
